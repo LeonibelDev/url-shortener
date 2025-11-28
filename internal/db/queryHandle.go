@@ -1,17 +1,15 @@
 package db
 
 import (
+	"context"
 	"fmt"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func AddNewUrl(id, link string) bool {
-	db := DBConnection()
-	defer db.Close()
 
-	query := `INSERT INTO Urls (ID, Link) VALUES (?, ?)`
-	_, err := db.Exec(query, id, link)
+	query := `INSERT INTO urls (ID, link) VALUES ($1, $2)`
+
+	_, err := Conn.Exec(context.Background(), query, id, link)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Printf("❌ Error: %s", err)
@@ -23,12 +21,10 @@ func AddNewUrl(id, link string) bool {
 }
 
 func GetUrl(id string) string {
-	db := DBConnection()
-	defer db.Close()
 
 	var link string
-	query := `SELECT Link FROM Urls WHERE ID = ?`
-	err := db.QueryRow(query, id).Scan(&link)
+	query := `SELECT link FROM urls WHERE ID = $1`
+	err := Conn.QueryRow(context.Background(), query, id).Scan(&link)
 	if err != nil {
 		fmt.Println(err)
 		return ""

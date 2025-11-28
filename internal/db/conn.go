@@ -1,18 +1,37 @@
 package db
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
+	"os"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func DBConnection() *sql.DB {
-	db, err := sql.Open("sqlite3", "internal/db/urls.db")
+var Conn *pgxpool.Pool
+
+func DBConnection() error {
+	var err error
+	Conn, err = pgxpool.New(context.Background(), os.Getenv("PSQL_CONN"))
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		return fmt.Errorf("Unable to connect to database: %w", err)
+
 	}
 
-	return db
+	fmt.Println("Connected to the database successfully")
+	return nil
+}
+
+func ValidateDBExists() error {
+	query := `
+		CREATE TABLE IF NOT EXISTS urls (
+			ID VARCHAR(10) UNIQUE PRIMARY KEY,
+			link VARCHAR NOT NULL
+	);`
+
+	_, err := Conn.Exec(context.Background(), query)
+	if err != nil {
+		return fmt.Errorf("Unable to create table: %w", err)
+	}
+	return nil
 }

@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
 	"text/template"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/leonibeldev/url-shortener/internal/db"
 	"github.com/leonibeldev/url-shortener/internal/routes"
 )
@@ -34,9 +36,18 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	// Validate DB
+	db.DBConnection()
 	db.ValidateDBExists()
 
+	defer db.Conn.Close()
+	// Routes
 	http.HandleFunc("/shorten", routes.HandleShorten)
 
 	// Logger middleware
