@@ -4,52 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Shortener</title>
+    <title>Link Shortener</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
+        /* Minimalist Font & Antialiasing */
         html {
-            font-family: -apple- system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.1;
-            }
-
-            50% {
-                transform: scale(1.2);
-                opacity: 0.2;
-            }
-        }
-
-        .animated-bg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .animated-bubble {
-            position: absolute;
-            border-radius: 50%;
-            animation: pulse var(--duration) infinite;
-            animation-delay: var(--delay);
-            width: var(--size);
-            height: var(--size);
-            left: var(--left);
-            top: var(--top);
-            background-color: var(--color);
-        }
-
+        /* Simplified transition for the result block */
         .shortened-link {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(10px);
             animation: slideIn 0.3s ease forwards;
         }
 
@@ -63,127 +32,140 @@
 </head>
 
 <body>
-    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 relative overflow-hidden">
-        <!-- Main content -->
-        <div class="relative z-10">
-            <main
-                class="container mx-auto px-4 py-16 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
-                <div class="text-center mb-12">
-                    <div class="flex items-center justify-center mb-6">
-                        <i data-lucide="link" class="w-12 h-12 text-blue-600"></i>
-                    </div>
-                    <h1
-                        class="text-5xl font-semibold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-                        Shorten Your Links
-                    </h1>
-                    <p class="text-gray-600 text-xl max-w-2xl mx-auto">
-                        Transform your long URLs into clean, manageable links with our powerful URL shortener.
-                    </p>
+    <div class="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative">
+        
+        <div class="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+        
+        <main class="w-full max-w-xl relative z-10">
+            <header class="text-center mb-10">
+                <div class="flex items-center justify-center mb-3">
+                    <i data-lucide="link" class="w-8 h-8 text-blue-600 stroke-[2]"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Quick Link Shortener
+                </h1>
+                <p class="text-gray-500 mt-2">
+                    Paste a long link, get a short one. Simple as that.
+                </p>
+            </header>
+
+            <div class="bg-white rounded-xl shadow-xl p-6 border border-gray-100">
+                <form id="shortenForm" class="flex flex-col sm:flex-row gap-3">
+                    <input type="url" name="longUrl" placeholder="Enter your long URL here..."
+                        class="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+                        required>
+                    <button type="submit" id="submitButton"
+                        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-md flex items-center justify-center gap-2">
+                        <i data-lucide="send-horizontal" class="w-5 h-5 stroke-[2]"></i>
+                        Shorten
+                    </button>
+                </form>
+            </div>
+            
+            <div id="shortenedLinks" class="w-full mt-6">
                 </div>
 
-                <div class="w-full max-w-2xl bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-8 mb-8">
-                    <form id="shortenForm" class="flex flex-col md:flex-row gap-4">
-                        <input type="url" placeholder="Paste your long URL here..."
-                            class="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500 transition-colors"
-                            required>
-                        <button type="submit"
-                            class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2">
-                            <i data-lucide="link" class="w-5 h-5"></i>
-                            Shorten
-                        </button>
-                    </form>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-xl w-full mt-12 text-center text-gray-500 text-sm">
+                <div class="flex items-center gap-2 justify-center">
+                    <i data-lucide="zap" class="w-4 h-4 text-blue-500 stroke-[2]"></i>
+                    <span>Lightning Fast</span>
                 </div>
+                <div class="flex items-center gap-2 justify-center">
+                    <i data-lucide="lock" class="w-4 h-4 text-blue-500 stroke-[2]"></i>
+                    <span>Secure & Private</span>
+                </div>
+                <div class="flex items-center gap-2 justify-center">
+                    <i data-lucide="edit" class="w-4 h-4 text-blue-500 stroke-[2]"></i>
+                    <span>Clean URLs</span>
+                </div>
+            </div>
+            
+        </main>
 
-                <!-- Shortened Links Section -->
-                <div id="shortenedLinks" class="w-full max-w-2xl mb-12">
-                    <!-- Links will be added here dynamically -->
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full">
-                    <div
-                        class="bg-white/60 backdrop-blur-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Fast & Reliable</h3>
-                        <p class="text-gray-600">Shorten links in seconds with a platform optimized for speed and
-                            stability.</p>
-                    </div>
-                    <div
-                        class="bg-white/60 backdrop-blur-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Secure Links</h3>
-                        <p class="text-gray-600">Protect your URLs with advanced technology and enhanced privacy
-                            options.</p>
-                    </div>
-                    <div
-                        class="bg-white/60 backdrop-blur-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Hassle-Free</h3>
-                        <p class="text-gray-600">Share links easily without registrations or unnecessary steps.</p>
-                    </div>
-                </div>
-            </main>
-
-            <!-- Footer -->
-            <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-100">
-                <div class="container mx-auto px-4 py-6">
-                    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div class="text-gray-600 text-sm">
-                            © 2025 URL Shortener. All rights reserved.
-                        </div>
-                        <div class="flex items-center gap-6">
-                            <a href="https://github.com/leonibeldev" target="_blank" rel="noopener noreferrer"
-                                class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-2">
-                                <i data-lucide="github" class="w-5 h-5"></i>
-                                <span>GitHub Repository</span>
-                            </a>
-                            <a href="https://leonibeldev.vercel.app/" target="_blank" rel="noopener noreferrer"
-                                class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-2">
-                                <i data-lucide="external-link" class="w-5 h-5"></i>
-                                <span>Developer</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
+        <footer class="mt-auto pt-10 pb-4 w-full max-w-xl relative z-10">
+            <div class="text-gray-500 text-xs text-center">
+                &copy; 2025 Link Shortener. All rights reserved. | 
+                <a href="https://github.com/leonibeldev" target="_blank" rel="noopener noreferrer"
+                    class="text-blue-500 hover:text-blue-600 transition-colors">Developer</a>
+            </div>
+        </footer>
     </div>
 
     <script>
-        // Initialize Lucide icons
+        // Inicializa Lucide Icons al cargar la página.
         lucide.createIcons();
 
-        // Function to add a new shortened link to the list
-        function addShortenedLink(originalUrl, shortUrl) {
-            const shortenedLinksContainer = document.getElementById('shortenedLinks');
-            const linkElement = document.createElement('div');
-            linkElement.className = 'shortened-link bg-white/80 backdrop-blur-sm rounded-lg shadow-sm p-4 mb-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-4';
+        const shortenedLinksContainer = document.getElementById('shortenedLinks');
 
-            linkElement.innerHTML = `
-        <div class="flex-1 min-w-0">
-          <p class="text-sm text-gray-500 truncate" title="${originalUrl}">
-            ${originalUrl}
-          </p>
-          <p class="text-blue-600 font-medium truncate">
-            ${shortUrl}
-          </p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="copyToClipboard('${shortUrl}')" class="text-gray-600 hover:text-blue-600 transition-colors p-2">
-            <i data-lucide="clipboard" class="w-4 h-4"></i>
-          </button>
-          <a href="${shortUrl}" target="_blank" class="text-gray-600 hover:text-blue-600 transition-colors p-2">
-            <i data-lucide="external-link" class="w-4 h-4"></i>
-          </a>
-        </div>
-      `;
-
-            shortenedLinksContainer.insertBefore(linkElement, shortenedLinksContainer.firstChild);
-            lucide.createIcons({ parent: linkElement });
+        // Función para renderizar un icono de Lucide dinámicamente
+        function renderLucideIcon(name, className) {
+            // Se usa el elemento `<i>` y se inicializa después de insertarlo
+            return `<i data-lucide="${name}" class="${className} stroke-[2]"></i>`;
         }
 
-        // Function to copy text to clipboard
-        async function copyToClipboard(text) {
+        // Function to add a new shortened link, replacing the old one
+        function addShortenedLink(originalUrl, shortUrl) {
+            // 1. CLEAR PREVIOUS LINK (Ensures only one link is displayed)
+            shortenedLinksContainer.innerHTML = '';
+
+            const linkElement = document.createElement('div');
+            linkElement.className = 'shortened-link bg-white border border-gray-200 rounded-xl shadow-lg p-5 flex flex-col items-start gap-3';
+
+            // --- Bloque HTML Actualizado con Lucide Icons ---
+            linkElement.innerHTML = `
+                <div class="w-full flex justify-between items-center">
+                    <a href="${shortUrl}" target="_blank" class="text-xl text-blue-600 font-semibold hover:underline truncate max-w-[60%] sm:max-w-[80%]" title="${shortUrl}">
+                        ${shortUrl}
+                    </a>
+                    <div class="flex items-center gap-1">
+                        
+                        <button onclick="copyToClipboard('${shortUrl}', this)" 
+                                class="text-gray-500 hover:text-blue-600 transition-colors p-2 rounded-lg bg-gray-100 hover:bg-gray-200"
+                                title="Copy Link">
+                            ${renderLucideIcon('copy', 'w-5 h-5')}
+                        </button>
+
+                        <a href="${shortUrl}" target="_blank" 
+                            class="text-gray-500 hover:text-blue-600 transition-colors p-2 rounded-lg bg-gray-100 hover:bg-gray-200"
+                            title="Open Link">
+                            ${renderLucideIcon('external-link', 'w-5 h-5')}
+                        </a>
+
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 truncate w-full" title="Original: ${originalUrl}">
+                    ${originalUrl}
+                </p>
+            `;
+            // --- Fin del Bloque HTML Actualizado ---
+
+            shortenedLinksContainer.appendChild(linkElement);
+            // Vuelve a crear los iconos después de inyectar el nuevo HTML
+            lucide.createIcons(); 
+        }
+
+        // Function to copy text to clipboard with basic UI feedback
+        async function copyToClipboard(text, button) {
             try {
                 await navigator.clipboard.writeText(text);
-                // You could add a toast notification here
-                console.log('Copied to clipboard');
+                
+                // Buscar el icono actual dentro del botón
+                const currentIcon = button.querySelector('svg');
+                
+                // Guardar el contenido original para restaurar
+                const originalIconHTML = button.innerHTML;
+                
+                // Reemplazar el icono por "Check" verde (usando renderLucideIcon)
+                button.innerHTML = renderLucideIcon('check', 'w-5 h-5 text-green-500');
+                // Inicializar el nuevo icono de Lucide
+                lucide.createIcons();
+
+                // Revert icon after a short delay
+                setTimeout(() => {
+                    button.innerHTML = originalIconHTML;
+                    lucide.createIcons(); // Vuelve a inicializar el icono de Copy
+                }, 1500);
+                
             } catch (err) {
                 console.error('Failed to copy text: ', err);
             }
@@ -192,8 +174,16 @@
         // Form submission handler
         document.getElementById('shortenForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            const input = this.querySelector('input[type="url"]');
+            const input = this.querySelector('input[name="longUrl"]');
             const url = input.value;
+            const submitButton = document.getElementById('submitButton');
+            const originalButtonContent = submitButton.innerHTML;
+
+            // Deshabilitar botón y mostrar estado de carga
+            submitButton.disabled = true;
+            submitButton.innerHTML = `${renderLucideIcon('loader-circle', 'w-5 h-5 animate-spin')} Shortening...`;
+            // Inicializa el icono de carga
+            lucide.createIcons();
 
             fetch('/shorten', {
                 method: 'POST',
@@ -204,15 +194,31 @@
                     "link": url
                 }),
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    const shortUrl = window.location.origin + "/" + data.id;
-                    addShortenedLink(url, shortUrl);
-                    input.value = ''; // Clear the input
+                    if (data && data.id) {
+                        const shortUrl = window.location.origin + "/" + data.id;
+                        addShortenedLink(url, shortUrl);
+                        input.value = ''; 
+                    } else {
+                         console.error('API response missing ID:', data);
+                         alert('Link shortened, but response format was unexpected.');
+                    }
                 })
                 .catch(error => {
                     console.error('Error shortening URL:', error);
-                    // You could add an error message to the UI here
+                    alert('Error: Could not shorten link. Check the console for details.');
+                })
+                .finally(() => {
+                    // Re-enable button and restore content
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalButtonContent;
+                    lucide.createIcons();
                 });
         });
     </script>
