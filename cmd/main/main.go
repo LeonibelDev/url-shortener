@@ -28,7 +28,6 @@ func Logger(next http.Handler) http.Handler {
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	if strings.TrimPrefix(r.URL.Path, "/") == "" {
-
 		tmpl.Execute(w, nil)
 	} else {
 		routes.HandleRedirect(w, r)
@@ -47,8 +46,9 @@ func main() {
 	db.ValidateDBExists()
 
 	defer db.Conn.Close()
+
 	// Routes
-	http.HandleFunc("/shorten", routes.HandleShorten)
+	http.Handle("/shorten", Logger(http.HandlerFunc(routes.HandleShorten)))
 
 	// Logger middleware
 	http.Handle("/", Logger(http.HandlerFunc(Home)))
